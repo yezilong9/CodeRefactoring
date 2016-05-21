@@ -2,7 +2,7 @@ package one;
 
 /**
  * Created by zilongye on 16/5/12.
- * 表示某个顾客租了一步影片
+ * 表示某个顾客租了一部影片
  */
 public class Rental {
 
@@ -28,5 +28,28 @@ public class Rental {
 
     public void set_daysRented(int _daysRented) {
         this._daysRented = _daysRented;
+    }
+
+
+    public double getCharge() {
+        double result = 0;
+        switch (getMovie().getPriceCode()){
+            case Movie.REGULAR:
+                result += 2;
+                if(getDaysRented() > 2){
+                    result += (getDaysRented() - 2) * 1.5;
+                }
+                break;
+            case Movie.NEW_RELEASE:
+                result += getDaysRented() * 3;
+                break;
+            case Movie.CHILDRENS:
+                result += 1.5;
+                if(getDaysRented() > 3){
+                    result += (getDaysRented() - 3) * 1.5;
+                }
+                break;
+        }
+        return result;
     }
 }
