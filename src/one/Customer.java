@@ -11,6 +11,7 @@ public class Customer {
 
     private String _name;
     private Vector _rentals = new Vector();
+    private double thisAmount;
 
     public Customer(String _name) {
         this._name = _name;
@@ -24,28 +25,41 @@ public class Customer {
         return _name;
     }
 
+    /**
+     * 可以添加功能
+     * @return
+     */
     public String statement(){
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
         Enumeration rentals = _rentals.elements();
         String result = "Rental Record for " + getName() + "\n";
         while(rentals.hasMoreElements()){
-            double thisAmount;
             Rental each = (Rental) rentals.nextElement();
-
-            thisAmount = each.getCharge();
-
-            frequentRenterPoints ++;
-
-            if((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) && each.getDaysRented() > 1){
-                frequentRenterPoints ++;
-            }
-            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
+            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(each.getCharge()) + "\n";
         }
 
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
+        result += "Amount owed is " + String.valueOf(getTotalCharge()) + "\n";
+        result += "You earned " + String.valueOf(getFrequentRenterPoints()) + " frequent renter points";
+        return result;
+    }
+
+
+    private double getTotalCharge(){
+        double result = 0;
+        Enumeration rentals = _rentals.elements();
+        while(rentals.hasMoreElements()){
+            Rental each = (Rental) rentals.nextElement();
+            result += each.getCharge();
+        }
+        return result;
+    }
+
+    private int getFrequentRenterPoints(){
+        int result = 0;
+        Enumeration rentals = _rentals.elements();
+        while(rentals.hasMoreElements()){
+            Rental each = (Rental) rentals.nextElement();
+            result += each.getFrequentRenterPoints();
+        }
         return result;
     }
 
