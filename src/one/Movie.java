@@ -11,19 +11,31 @@ public class Movie {
     public static final int NEW_RELEASE = 1;
 
     private String _title;
-    private int _priceCode;
+    private Price price;
 
     public Movie(String _title, int _priceCode) {
         this._title = _title;
-        this._priceCode = _priceCode;
+        setPriceCode(_priceCode);
     }
 
     public int getPriceCode() {
-        return _priceCode;
+        return price.getPriceCode();
     }
 
-    public void set_priceCode(int _priceCode) {
-        this._priceCode = _priceCode;
+    public void setPriceCode(int _priceCode) {
+        switch (_priceCode){
+            case CHILDRENS:
+                price = new ChildrensPrice();
+                break;
+            case REGULAR:
+                price = new RegularPrice();
+                break;
+            case NEW_RELEASE:
+                price = new NewReleasePrice();
+                break;
+            default:
+                throw new IllegalArgumentException("unknow Price Code");
+        }
     }
 
     public String getTitle() {
@@ -36,24 +48,10 @@ public class Movie {
 
 
     public double getCharge(int daysRented){
-        double result = 0;
-        switch (getPriceCode()){
-            case Movie.REGULAR:
-                result += 2;
-                if(daysRented > 2){
-                    result += (daysRented - 2) * 1.5;
-                }
-                break;
-            case Movie.NEW_RELEASE:
-                result += daysRented * 3;
-                break;
-            case Movie.CHILDRENS:
-                result += 1.5;
-                if(daysRented > 3){
-                    result += (daysRented - 3) * 1.5;
-                }
-                break;
-        }
-        return result;
+        return price.getCharge(daysRented);
+    }
+
+    public int getFrequentRenterPoints(int daysRented) {
+        return price.getFrequentRenterPoints(daysRented);
     }
 }
